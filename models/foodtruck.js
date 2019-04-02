@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const FoodTruckSchema = new Schema({
     name: String,
-    categorie: {
+    category: {
         type: Schema.Types.ObjectId,
         ref: 'category'
     },
