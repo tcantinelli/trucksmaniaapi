@@ -59,22 +59,6 @@ module.exports = {
       });
   },
 
-  create(req, res) {
-    const body = req.body;
-    const user = new User({
-      name: body.name,
-      category: body.category,
-      places: body.places,
-      sessions: body.sessions,
-      articles: body.articles,
-      logo: body.logo,
-      images: body.images
-    });
-    user.save().then(() => {
-      res.send({ result: user });
-    });
-  },
-
   delete(req, res) {
     const { id } = req.params;
 
