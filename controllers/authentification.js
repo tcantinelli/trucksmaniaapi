@@ -8,7 +8,7 @@ function getTokenForUser(user) {
     const timeStamp = new Date().getTime();
 
     return jwt.encode({
-        sub: user.id,
+        sub: user._id.toString(),
         iat: timeStamp
     }, config.secret);
 }
@@ -42,7 +42,6 @@ exports.signup = function(req,res,next) {
                     return next(err);
                 }
                 res.json({token: getTokenForUser(user)});
-                console.log(user);
             })
         }
     });
