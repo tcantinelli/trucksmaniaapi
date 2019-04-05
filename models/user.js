@@ -7,7 +7,7 @@ const UserSchema = new Schema({
     email: String,
     password: String,
     inscription: Date,
-    account: String,
+    account: String, //"foodtruck" ou "client"
     validation: Boolean, //Validation inscription par email
     //Favoris pour clients, FT pour FT à l'index 0 du tableau
     foodtrucks: [{
