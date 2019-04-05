@@ -8,9 +8,9 @@ mongoose.Promise = global.Promise;
 server.use(bodyParser.json());
 routes(server);
 
-server.listen(3040, () => {
+server.listen(3060, () => {
 
-    mongoose.connect('mongodb://localhost/soapandsoftapi',{ useNewUrlParser: true });
+    mongoose.connect('mongodb://localhost/trucksmaniaapi',{ useNewUrlParser: true });
     
     mongoose.connection.once('open',() => {
         console.log('Connexion OK');
