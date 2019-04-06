@@ -15,8 +15,8 @@ const OrderSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'orderElement'
 	}],
-	grade: Number,
-	comment: String
+	grade: { type: Number, default: null },
+	comment: { type: String, default: null }
 });
 
 //Total commande en methode suppl

@@ -5,6 +5,8 @@ const PlaceController = require('../controllers/place');
 const SessionController = require('../controllers/session');
 const ArticleController = require('../controllers/article');
 const FoodTruckController = require('../controllers/foodtruck');
+const OrderElementController = require('../controllers/orderElement');
+const OrderController = require('../controllers/order');
 
 require('../services/passport');
 const passport = require('passport');
@@ -46,4 +48,12 @@ module.exports = server => {
 	//FoodTruck
 	server.post('/foodtruck', FoodTruckController.create);
 	server.get('/foodtrucks', FoodTruckController.readAll);
+
+	//OrderElement
+	server.post('/orderelement', OrderElementController.create);
+	server.get('/orderelements', OrderElementController.readAll);
+
+	//Order
+	server.post('/order', OrderController.create);
+	server.get('/orders', OrderController.readAll);
 };

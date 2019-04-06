@@ -38,12 +38,10 @@ module.exports = {
 	create(req, res) {
 		const body = req.body;
 		const order = new Order({
-			dateOrder: body.dateOrder,
+			dateOrder: new Date(),
 			client: body.client,
 			foodtruck: body.foodtruck,
 			elements: body.elements,
-			grade: body.grade,
-			comment: body.comment
 		});
 		order.save().then(() => {
 			res.send({ result: order });
