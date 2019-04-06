@@ -1,4 +1,5 @@
 const AuthentificationController = require('../controllers/authentification');
+const UserController = require('../controllers/user');
 const CategoryController = require('../controllers/category');
 const PlaceController = require('../controllers/place');
 const SessionController = require('../controllers/session');
@@ -15,6 +16,11 @@ module.exports = server => {
 	//Authentification
 	server.post('/signup', AuthentificationController.signup);
 	server.post('/signin', requireValidCredentials, AuthentificationController.signin);
+	
+	//User
+	server.post('/adduser', UserController.create);
+	server.get('/user/:id', UserController.read);
+	server.get('/users', UserController.readAll);
 	
 	// server.get('/projects', ProjectController.readAll);
 	// server.get('/project/:id', ProjectController.read);

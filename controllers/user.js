@@ -59,6 +59,20 @@ module.exports = {
 			});
 	},
 
+	create(req, res) {
+		const body = req.body;
+		const user = new User({
+			pseudo: body.pseudo,
+			email: body.email,
+			password: body.password,
+			account: body.account,
+			foodtrucks: body.foodtrucks
+		});
+		user.save().then(() => {
+			res.send({ result: user });
+		});
+	},
+
 	delete(req, res) {
 		const { id } = req.params;
 
