@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const routes = require('./routes/index');
 const bodyParser = require('body-parser');
 const server = express();
+const cors = require('cors');
 
 mongoose.Promise = global.Promise;
 server.use(bodyParser.json());
+server.use(cors());
 routes(server);
 
 server.listen(3060, () => {

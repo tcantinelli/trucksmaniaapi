@@ -18,6 +18,7 @@
   "homepage": "https://gitlab.com/tcantinelli/apisoapandsoftjs#readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "jwt-simple": "^0.5.6",
     "lodash": "^4.17.11",
