@@ -11,7 +11,7 @@ const OrderController = require('../controllers/order');
 require('../services/passport');
 const passport = require('passport');
 
-//const requireToken = passport.authenticate('jwt', {session: false});
+const requireToken = passport.authenticate('jwt', {session: false});
 const requireValidCredentials = passport.authenticate('local', {session: false});
 
 module.exports = server => {
@@ -20,8 +20,8 @@ module.exports = server => {
 	server.post('/signin', requireValidCredentials, AuthentificationController.signin);
 	
 	//User
+	server.get('/user', requireToken, UserController.getUser);
 	server.post('/adduser', UserController.create);
-	server.get('/user/:id', UserController.read);
 	server.get('/users', UserController.readAll);
 	
 	// server.get('/projects', ProjectController.readAll);
