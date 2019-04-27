@@ -103,11 +103,12 @@ module.exports = {
 				.then(user => {
 					res.json({
 						pseudo: user.pseudo,
+						email: user.email,
 						account: user.account,
 						validation: user.validation,
 						foodtrucks: user.foodtrucks
 					});
 				});
-		})(req,res,next)
+		})(req,res,next);
 	}
 };
