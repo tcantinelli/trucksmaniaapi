@@ -37,19 +37,13 @@ module.exports = {
 			});
 	},
 
-	create(req, res) {
-		const body = req.body;
+	create(body) {
 		const foodtruck = new Foodtruck({
 			name: body.name,
-			category: body.category,
-			places: body.places,
-			sessions: body.sessions,
-			articles: body.articles,
-			logo: body.logo,
-			images: body.images
+			category: body.category
 		});
 		foodtruck.save().then(() => {
-			res.send({ result: foodtruck });
+			return foodtruck;
 		});
 	},
 

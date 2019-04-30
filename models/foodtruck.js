@@ -19,7 +19,7 @@ const FoodTruckSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'article'
 	}],
-	logo: String,
+	logo: {type: String, default: null},
 	images: [String]
 });
 

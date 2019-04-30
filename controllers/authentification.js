@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Foodtruck = require('../models/foodtruck');
 const lodash = require('lodash');
 const jwt = require('jwt-simple');
 const config = require('../config');
@@ -13,10 +14,9 @@ function getTokenForUser(user) {
 	}, config.secret);
 }
 exports.signup = function(req,res,next) {
-	const pseudo = req.body.pseudo;
 	const email = req.body.email;
 	const password = req.body.password;
-	const account = req.body.account;
+	const newFT = req.body.foodtruck;
 
 	User.findOne({email: email}, (err,existingUser) => {
 		if(err) {
@@ -30,18 +30,29 @@ exports.signup = function(req,res,next) {
 		if(lodash.isEmpty(email) || lodash.isEmpty(password)) {
 			return res.status(422).send({error: 'Email et/ou Password vide'});
 		}else{
-			const user = new User({
-				pseudo: pseudo,
-				email: email,
-				password: password,
-				inscription: new Date(),
-				account: account
+
+			//Creation du FT
+			//const foodtruck = FoodTruckController.create(newFT);
+
+			const foodtruck = new Foodtruck({
+				name: newFT.name,
+				category: newFT.category
 			});
-			user.save((err) => {
-				if(err) {
-					return next(err);
-				}
-				res.json({token: getTokenForUser(user)});
+			foodtruck.save().then(() => {
+				//Creation User
+				const user = new User({
+					email: email,
+					password: password,
+					account: 'foodtruck',
+					foodtrucks: [foodtruck._id]
+				});
+				user.save((err) => {
+					if(err) {
+						return next(err);
+					}
+					console.log(foodtruck);
+					res.json({token: getTokenForUser(user)});
+				});
 			});
 		}
 	});
