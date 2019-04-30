@@ -63,7 +63,6 @@ module.exports = {
 	create(req, res) {
 		const body = req.body;
 		const user = new User({
-			pseudo: body.pseudo,
 			email: body.email,
 			password: body.password,
 			account: body.account,
