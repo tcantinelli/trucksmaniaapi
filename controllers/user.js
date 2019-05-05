@@ -100,7 +100,6 @@ module.exports = {
 					]
 				})
 				.then(user => {
-					console.log(user);
 					res.json({
 						pseudo: user.pseudo,
 						email: user.email,

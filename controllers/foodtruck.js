@@ -4,15 +4,15 @@ module.exports = {
 	readAll(req, res) {
 		Foodtruck.find()
 			.populate('category')
-			// .populate('places')
-			// .populate({
-			// 	path: 'sessions',
-			// 	populate: {
-			// 		path: 'place',
-			// 		model: 'place'
-			// 	}
-			// })
-			// .populate('articles')
+			.populate('places')
+			.populate({
+				path: 'sessions',
+				populate: {
+					path: 'place',
+					model: 'place'
+				}
+			})
+			.populate('articles')
 			.then(foodtrucks => {
 				res.send(foodtrucks);
 			});
