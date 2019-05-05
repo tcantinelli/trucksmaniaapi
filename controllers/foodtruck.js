@@ -3,16 +3,16 @@ const Foodtruck = require('../models/foodtruck');
 module.exports = {
 	readAll(req, res) {
 		Foodtruck.find()
-			.populate('categorie')
-			.populate('places')
-			.populate({
-				path: 'sessions',
-				populate: {
-					path: 'place',
-					model: 'place'
-				}
-			})
-			.populate('articles')
+			.populate('category')
+			// .populate('places')
+			// .populate({
+			// 	path: 'sessions',
+			// 	populate: {
+			// 		path: 'place',
+			// 		model: 'place'
+			// 	}
+			// })
+			// .populate('articles')
 			.then(foodtrucks => {
 				res.send(foodtrucks);
 			});
@@ -22,7 +22,7 @@ module.exports = {
 		const { id } = req.params;
 
 		Foodtruck.findById(id)
-			.populate('categorie')
+			.populate('category')
 			.populate('places')
 			.populate({
 				path: 'sessions',
