@@ -7,12 +7,25 @@ const ArticleController = require('../controllers/article');
 const FoodTruckController = require('../controllers/foodtruck');
 const OrderElementController = require('../controllers/orderElement');
 const OrderController = require('../controllers/order');
+const multer = require('multer');
 
 require('../services/passport');
 const passport = require('passport');
 
 const requireToken = passport.authenticate('jwt', {session: false});
 const requireValidCredentials = passport.authenticate('local', {session: false});
+
+// SET STORAGE
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, './public');
+	},
+	filename: function (req, file, cb) {
+		cb(null, file.fieldname + '-' + Date.now());
+	}
+});
+   
+const upload = multer({ storage: storage });
 
 module.exports = server => {
 	//Authentification
@@ -48,6 +61,9 @@ module.exports = server => {
 	//FoodTruck
 	server.post('/foodtruck', FoodTruckController.create);
 	server.get('/foodtrucks', FoodTruckController.readAll);
+
+	//Upload logo
+	server.post('/uplogo', upload.single('file'), FoodTruckController.uploadFile);
 
 	//OrderElement
 	server.post('/orderelement', OrderElementController.create);

@@ -19,8 +19,14 @@ const FoodTruckSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'article'
 	}],
-	logo: {type: String, default: null},
-	images: [String]
+	logo: {
+		type: Schema.Types.ObjectId,
+		ref: 'image'
+	},
+	images: [{
+		type: Schema.Types.ObjectId,
+		ref: 'image'
+	}]
 });
 
 const FoodTruck = mongoose.model('foodtruck', FoodTruckSchema, 'FOODTRUCK');
