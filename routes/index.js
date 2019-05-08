@@ -7,6 +7,7 @@ const ArticleController = require('../controllers/article');
 const FoodTruckController = require('../controllers/foodtruck');
 const OrderElementController = require('../controllers/orderElement');
 const OrderController = require('../controllers/order');
+const ImageController = require('../controllers/image');
 const multer = require('multer');
 
 require('../services/passport');
@@ -46,7 +47,7 @@ module.exports = server => {
 	server.post('/category', CategoryController.create);
 	server.get('/categories', CategoryController.readAll);
 
-	//Category
+	//Place
 	server.post('/place', PlaceController.create);
 	server.get('/places', PlaceController.readAll);
 
@@ -54,7 +55,7 @@ module.exports = server => {
 	server.post('/session', SessionController.create);
 	server.get('/sessions', SessionController.readAll);
 
-	//Session
+	//Article
 	server.post('/article', ArticleController.create);
 	server.get('/articles', ArticleController.readAll);
 
@@ -64,6 +65,9 @@ module.exports = server => {
 
 	//Upload logo
 	server.post('/uplogo', upload.single('file'), FoodTruckController.uploadFile);
+
+	//Get Image
+	server.get('/image/:id', ImageController.get);
 
 	//OrderElement
 	server.post('/orderelement', OrderElementController.create);
