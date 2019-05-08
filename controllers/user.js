@@ -96,6 +96,10 @@ module.exports = {
 						{
 							path: 'category',
 							model: 'category'
+						},
+						{
+							path: 'logo',
+							model: 'image'
 						}
 					]
 				})
