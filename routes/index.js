@@ -65,6 +65,7 @@ module.exports = server => {
 
 	//Upload logo
 	server.post('/uplogo', upload.single('file'), FoodTruckController.uploadFile);
+	server.post('/upprofil', upload.single('file'), FoodTruckController.updateProfil);
 
 	//Get Image
 	server.get('/image/:id', ImageController.get);

@@ -58,44 +58,71 @@ module.exports = {
 		});
 	},
 
-	uploadFile(req, res, next) {
+	updateProfil(req, res, next) {
+		console.log(req.file);
+		//Recuperation des données du Post
+		const logo = req.file;
+		const name = req.body.name;
+		const categoryID = req.body.category;
+
+		//Recuperation du FT concerné
+		Foodtruck.findById(req.body.idFT)
+			.populate('logo')
+			.populate('category')
+			.then((theFoodTruck) => {
+				
+				//Update logo
+				if (logo) {
+					console.log('logo');
+					theFoodTruck.logo = this.uploadFile(theFoodTruck.logo, logo);
+				}
+
+				//Update name
+				if (name !== 'null') {
+					theFoodTruck.name !== name ? theFoodTruck.name = name : null ;
+				}
+
+				//Update category
+				if (categoryID !== 'null') {
+					theFoodTruck.category._id !== categoryID ? theFoodTruck.category = categoryID : null;
+				}
+
+				//Sauvegarde
+				theFoodTruck.save().then((result) => {
+					result.populate('logo')
+						.populate('places').execPopulate()
+						.then(() => {
+							res.send(result);
+							next();
+						});
+				});
+			});
+	},
+
+	uploadFile(oldLogo, newLogo) {
 		//Sauvegarde de l'image
 		const image = new Image({
-			originalname: req.file.originalname,
-			mimetype: req.file.mimetype,
-			filename: req.file.filename,
-			path: req.file.path,
-			size: req.file.size
+			originalname: newLogo.originalname,
+			mimetype: newLogo.mimetype,
+			filename: newLogo.filename,
+			path: newLogo.path,
+			size: newLogo.size
 		});
 		image.save().then(() => {			
-			//Recuperation du FT concerné
-			Foodtruck.findById(req.body.idFT)
-				.populate('logo')
-				.then((theFoodTruck) => {
-					//Si logo déjà sauvegardé, suppression de l'image et du document en bdd
-					if(theFoodTruck.logo) {
-						fs.unlink(`./public/${theFoodTruck.logo.filename}`, (err) => {
-							if (err) {
-								console.error(err);
-							}
-						});
-						Image.deleteOne({_id: theFoodTruck.logo._id}, (err) =>{
-							console.log(err);
-						});
+			//Si logo déjà en BDD, suppression de l'image et du document relatif
+			if(oldLogo) {
+				fs.unlink(`./public/${oldLogo.filename}`, (err) => {
+					if (err) {
+						console.error(err);
 					}
-
-					//Update du FT avec son id (idFT)
-					theFoodTruck.logo = image._id;
-					theFoodTruck.save().then((result) => {
-						result.populate('logo')
-							.populate('places').execPopulate()
-							.then(() => {
-								res.send(result);
-								next();
-							});
-					});
 				});
-			
+				Image.deleteOne({_id: oldLogo._id}, (err) =>{
+					console.log(err);
+				});
+			}
+
+			//Retourne id image
+			return image._id;
 		});
 	}
 };
