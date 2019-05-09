@@ -94,10 +94,6 @@ module.exports = {
 					path: 'foodtrucks',
 					populate: [
 						{
-							path: 'category',
-							model: 'category'
-						},
-						{
 							path: 'logo',
 							model: 'image'
 						}

@@ -32,8 +32,6 @@ exports.signup = function(req,res,next) {
 		}else{
 
 			//Creation du FT
-			//const foodtruck = FoodTruckController.create(newFT);
-
 			const foodtruck = new Foodtruck({
 				name: newFT.name,
 				category: newFT.category
@@ -50,7 +48,6 @@ exports.signup = function(req,res,next) {
 					if(err) {
 						return next(err);
 					}
-					console.log(foodtruck);
 					res.json({token: getTokenForUser(user)});
 				});
 			});

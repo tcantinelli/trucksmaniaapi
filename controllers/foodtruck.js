@@ -59,7 +59,6 @@ module.exports = {
 	},
 
 	updateProfil(req, res, next) {
-		console.log(req.file);
 		//Recuperation des données du Post
 		const logo = req.file;
 		const name = req.body.name;
@@ -68,61 +67,69 @@ module.exports = {
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
 			.populate('logo')
-			.populate('category')
+			// .populate('category')
 			.then((theFoodTruck) => {
-				
 				//Update logo
-				if (logo) {
-					console.log('logo');
-					theFoodTruck.logo = this.uploadFile(theFoodTruck.logo, logo);
-				}
+				uploadFile(theFoodTruck.logo, logo)
+					.then(result => {
 
-				//Update name
-				if (name !== 'null') {
-					theFoodTruck.name !== name ? theFoodTruck.name = name : null ;
-				}
+						if(result) {
+							theFoodTruck.logo = result;
+						}
+						//Update name
+						if (name !== 'null') {
+							theFoodTruck.name !== name ? theFoodTruck.name = name : null ;
+						}
 
-				//Update category
-				if (categoryID !== 'null') {
-					theFoodTruck.category._id !== categoryID ? theFoodTruck.category = categoryID : null;
-				}
+						//Update category
+						if (categoryID !== 'null') {
+							theFoodTruck.category !== categoryID ? theFoodTruck.category = categoryID : null;
+						}
 
-				//Sauvegarde
-				theFoodTruck.save().then((result) => {
-					result.populate('logo')
-						.populate('places').execPopulate()
-						.then(() => {
-							res.send(result);
-							next();
+						//Sauvegarde
+						theFoodTruck.save().then((result) => {
+							result.populate('logo')
+								.populate('places').execPopulate()
+								.then(() => {
+									res.send(result);
+									next();
+								});
 						});
-				});
+					});
 			});
 	},
-
-	uploadFile(oldLogo, newLogo) {
-		//Sauvegarde de l'image
-		const image = new Image({
-			originalname: newLogo.originalname,
-			mimetype: newLogo.mimetype,
-			filename: newLogo.filename,
-			path: newLogo.path,
-			size: newLogo.size
-		});
-		image.save().then(() => {			
-			//Si logo déjà en BDD, suppression de l'image et du document relatif
-			if(oldLogo) {
-				fs.unlink(`./public/${oldLogo.filename}`, (err) => {
-					if (err) {
-						console.error(err);
-					}
-				});
-				Image.deleteOne({_id: oldLogo._id}, (err) =>{
-					console.log(err);
-				});
-			}
-
-			//Retourne id image
-			return image._id;
-		});
-	}
 };
+
+function uploadFile(oldLogo, newLogo) {
+	return new Promise((resolve, reject) => {
+		if(newLogo) {
+			//Sauvegarde de l'image
+			const image = new Image({
+				originalname: newLogo.originalname,
+				mimetype: newLogo.mimetype,
+				filename: newLogo.filename,
+				path: newLogo.path,
+				size: newLogo.size
+			});
+			image.save().then(() => {			
+				//Si logo déjà en BDD, suppression de l'image et du document relatif
+				if(oldLogo) {
+					fs.unlink(`./public/${oldLogo.filename}`, (err) => {
+						if (err) {
+							console.error(err);
+						}
+					});
+					Image.deleteOne({_id: oldLogo._id}, (err) =>{
+						console.log(err);
+					});
+				}
+
+				//Retourne id image
+				resolve(image._id);
+			})
+				.catch((error) => reject(error));
+		} else {
+			resolve(null);
+		}
+	});
+}
