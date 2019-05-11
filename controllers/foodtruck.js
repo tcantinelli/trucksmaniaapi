@@ -93,6 +93,9 @@ module.exports = {
 								.then(() => {
 									res.send(result);
 									next();
+								})
+								.catch((err) => {
+									return next(err);
 								});
 						});
 					});
