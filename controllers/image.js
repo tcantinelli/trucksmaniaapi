@@ -7,7 +7,7 @@ module.exports = {
 		const { id } = req.params;
 
 		Image.findById(id).then(image => {
-			res.setHeader('Content-Type', image.mimetype);
+			res.setHeader('Content-Type', image.type);
 			fs.createReadStream(path.join(__dirname, `../public/${image.filename}`)).pipe(res);
 		});
 	},

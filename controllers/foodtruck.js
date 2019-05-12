@@ -58,24 +58,26 @@ module.exports = {
 		});
 	},
 
+	
 	updateProfil(req, res, next) {
-		//Recuperation des données du Post
+	//Recuperation des données du Post
 		const logo = req.file;
 		const name = req.body.name;
 		const categoryID = req.body.category;
+		//const imagesToUp = req.body.images;
 
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
 			.populate('logo')
-			// .populate('category')
+		// .populate('category')
 			.then((theFoodTruck) => {
-				//Update logo
-				uploadFile(theFoodTruck.logo, logo)
+			//Update logo
+				uploadLogo(theFoodTruck.logo, logo)
 					.then(result => {
-
 						if(result) {
 							theFoodTruck.logo = result;
 						}
+					
 						//Update name
 						if (name !== 'null') {
 							theFoodTruck.name !== name ? theFoodTruck.name = name : null ;
@@ -89,7 +91,8 @@ module.exports = {
 						//Sauvegarde
 						theFoodTruck.save().then((result) => {
 							result.populate('logo')
-								.populate('places').execPopulate()
+								.populate('places')
+								.populate('images').execPopulate()
 								.then(() => {
 									res.send(result);
 									next();
@@ -103,30 +106,22 @@ module.exports = {
 	},
 };
 
-function uploadFile(oldLogo, newLogo) {
+function uploadLogo(oldLogo, newLogo) {
 	return new Promise((resolve, reject) => {
 		if(newLogo) {
-			//Sauvegarde de l'image
+		//Sauvegarde de l'image
 			const image = new Image({
-				originalname: newLogo.originalname,
-				mimetype: newLogo.mimetype,
+				name: newLogo.originalname,
+				type: newLogo.mimetype,
 				filename: newLogo.filename,
-				path: newLogo.path,
 				size: newLogo.size
 			});
 			image.save().then(() => {			
-				//Si logo déjà en BDD, suppression de l'image et du document relatif
+			//Si logo déjà en BDD, suppression de l'image et du document relatif
 				if(oldLogo) {
-					fs.unlink(`./public/${oldLogo.filename}`, (err) => {
-						if (err) {
-							console.error(err);
-						}
-					});
-					Image.deleteOne({_id: oldLogo._id}, (err) =>{
-						console.log(err);
-					});
+					deleteImage(oldLogo.filename, oldLogo._id);
 				}
-
+		
 				//Retourne id image
 				resolve(image._id);
 			})
@@ -134,5 +129,51 @@ function uploadFile(oldLogo, newLogo) {
 		} else {
 			resolve(null);
 		}
+	});
+}
+
+function uploadImages(oldImages, newImages) {
+	return new Promise((resolve, reject) => {
+		if(newImages) {
+		//Array d'images
+			const listImages = [];
+
+			//Suppression des anciennes images
+			oldImages.map(oldImage => {
+				deleteImage(oldImage.filename, oldImage._id);
+			});
+
+			//Creation images
+			newImages.map(newImage => {
+			
+				//Sauvegarde de l'image
+				const image = new Image({
+					name: newImage.originalname,
+					type: newImage.mimetype,
+					filename: newImage.filename,
+					size: newImage.size
+				});
+				image.save().then(() => {
+					listImages.push(image._id);		
+				})
+					.catch((error) => reject(error));
+			});
+
+			//Retourne liste id image
+			resolve(listImages);
+		} else {
+			resolve(null);
+		}
+	});
+}
+
+function deleteImage(imgFilename, imgId) {
+	fs.unlink(`./public/${imgFilename}`, (err) => {
+		if (err) {
+			console.error(err);
+		}
+	});
+	Image.deleteOne({_id: imgId}, (err) =>{
+		console.log(err);
 	});
 }
