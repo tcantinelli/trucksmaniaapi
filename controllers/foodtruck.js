@@ -57,19 +57,16 @@ module.exports = {
 			res.send(foodtruck);
 		});
 	},
-
 	
 	updateProfil(req, res, next) {
 	//Recuperation des données du Post
 		const logo = req.file;
 		const name = req.body.name;
 		const categoryID = req.body.category;
-		//const imagesToUp = req.body.images;
 
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
 			.populate('logo')
-		// .populate('category')
 			.then((theFoodTruck) => {
 			//Update logo
 				uploadLogo(theFoodTruck.logo, logo)
@@ -104,6 +101,52 @@ module.exports = {
 					});
 			});
 	},
+
+	updateImages(req, res, next) {
+		//Recuperation des données du Post
+		const listFiles = req.files;
+	
+		//Recuperation du FT concerné
+		Foodtruck.findById(req.body.idFT)
+			.populate('images')
+			.then((theFoodTruck) => {
+				if(listFiles.length > 0) {
+				//Update images
+					uploadImages(theFoodTruck.images, listFiles)
+						.then(result => {
+							if(result) {
+								theFoodTruck.images = result;
+							}
+	
+							//Sauvegarde
+							theFoodTruck.save().then((result) => {
+								result.populate('logo')
+									.populate('places')
+									.populate('images').execPopulate()
+									.then(() => {
+										res.send(result);
+										next();
+									})
+									.catch((err) => {
+										return next(err);
+									});
+							});
+						});
+				}else{
+					theFoodTruck.populate('logo')
+						.populate('places')
+						.populate('images').execPopulate()
+						.then(() => {
+							res.send(theFoodTruck);
+							next();
+						})
+						.catch((err) => {
+							return next(err);
+						});
+				}
+			});
+		
+	},
 };
 
 function uploadLogo(oldLogo, newLogo) {
@@ -136,7 +179,7 @@ function uploadImages(oldImages, newImages) {
 	return new Promise((resolve, reject) => {
 		if(newImages) {
 		//Array d'images
-			const listImages = [];
+			const listImagesId = [];
 
 			//Suppression des anciennes images
 			oldImages.map(oldImage => {
@@ -144,8 +187,8 @@ function uploadImages(oldImages, newImages) {
 			});
 
 			//Creation images
-			newImages.map(newImage => {
-			
+			const addImg = newImages.map(newImage => {
+
 				//Sauvegarde de l'image
 				const image = new Image({
 					name: newImage.originalname,
@@ -153,14 +196,16 @@ function uploadImages(oldImages, newImages) {
 					filename: newImage.filename,
 					size: newImage.size
 				});
-				image.save().then(() => {
-					listImages.push(image._id);		
+				return image.save().then((res) => {
+					listImagesId.push(res._id);		
 				})
 					.catch((error) => reject(error));
 			});
-
-			//Retourne liste id image
-			resolve(listImages);
+			
+			Promise.all(addImg).then(() => {
+				//Retourne liste id image
+				resolve(listImagesId);
+			});
 		} else {
 			resolve(null);
 		}
