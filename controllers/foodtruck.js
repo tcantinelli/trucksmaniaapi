@@ -108,14 +108,13 @@ module.exports = {
 	
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
-			.populate('images')
 			.then((theFoodTruck) => {
 				if(listFiles.length > 0) {
 				//Update images
-					uploadImages(theFoodTruck.images, listFiles)
+					uploadImages(listFiles)
 						.then(result => {
 							if(result) {
-								theFoodTruck.images = result;
+								result.map(idImage => theFoodTruck.images.push(idImage));
 							}
 	
 							//Sauvegarde
@@ -147,6 +146,33 @@ module.exports = {
 			});
 		
 	},
+
+	deleteImage(req, res, next) {
+		//Recuperation des données du Post
+		const idFT = req.body.idFT;
+		const idImage = req.body.idImage;
+		const fileNameImage = req.body.fileNameImage;
+
+		Foodtruck.findOneAndUpdate(
+			{ '_id': idFT },
+			{ $pull: { 'images': idImage }},
+			// !!!! note the { 'new': true } option
+			{ 'new': true },
+			function(error, result) {
+				result.populate('logo')
+					.populate('places')
+					.populate('images').execPopulate()
+					.then(() => {
+						deleteImage(fileNameImage, idImage);
+						res.send(result);
+						next();
+					})
+					.catch((err) => {
+						return next(err);
+					});
+
+			});
+	}
 };
 
 function uploadLogo(oldLogo, newLogo) {
@@ -175,16 +201,11 @@ function uploadLogo(oldLogo, newLogo) {
 	});
 }
 
-function uploadImages(oldImages, newImages) {
+function uploadImages(newImages) {
 	return new Promise((resolve, reject) => {
 		if(newImages) {
 		//Array d'images
 			const listImagesId = [];
-
-			//Suppression des anciennes images
-			oldImages.map(oldImage => {
-				deleteImage(oldImage.filename, oldImage._id);
-			});
 
 			//Creation images
 			const addImg = newImages.map(newImage => {

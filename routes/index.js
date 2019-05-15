@@ -69,6 +69,9 @@ module.exports = server => {
 	//Upload Images
 	server.post('/upimages', upload.array('image',3), FoodTruckController.updateImages);
 
+	//delete Image
+	server.post('/delimage', FoodTruckController.deleteImage);
+
 	//Get Image
 	server.get('/image/:id', ImageController.get);
 
