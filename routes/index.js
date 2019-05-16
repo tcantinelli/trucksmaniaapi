@@ -60,7 +60,6 @@ module.exports = server => {
 	server.get('/articles', ArticleController.readAll);
 
 	//FoodTruck
-	server.post('/foodtruck', FoodTruckController.create);
 	server.get('/foodtrucks', FoodTruckController.readAll);
 
 	//Upload logo

@@ -40,29 +40,13 @@ module.exports = {
 			});
 	},
 
-	create(body) {
-		const foodtruck = new Foodtruck({
-			name: body.name,
-			category: body.category
-		});
-		foodtruck.save().then(() => {
-			return foodtruck;
-		});
-	},
-
-	delete(req, res) {
-		const { id } = req.params;
-
-		Foodtruck.findByIdAndRemove(id).then(foodtruck => {
-			res.send(foodtruck);
-		});
-	},
-	
 	updateProfil(req, res, next) {
 	//Recuperation des données du Post
 		const logo = req.file;
 		const name = req.body.name;
 		const categoryID = req.body.category;
+
+		console.log(req.body);
 
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
@@ -76,7 +60,7 @@ module.exports = {
 						}
 					
 						//Update name
-						if (name !== 'null') {
+						if (name !== '') {
 							theFoodTruck.name !== name ? theFoodTruck.name = name : null ;
 						}
 
