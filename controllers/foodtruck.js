@@ -1,52 +1,13 @@
 const Foodtruck = require('../models/foodtruck');
-const fs = require('fs');
-const Image = require('../models/image');
+const ImageController = require('../controllers/image');
 
 module.exports = {
-	readAll(req, res) {
-		Foodtruck.find()
-			.populate('category')
-			.populate('places')
-			.populate('logo')
-			.populate({
-				path: 'sessions',
-				populate: {
-					path: 'place',
-					model: 'place'
-				}
-			})
-			.populate('articles')
-			.then(foodtrucks => {
-				res.send(foodtrucks);
-			});
-	},
-
-	read(req, res) {
-		const { id } = req.params;
-
-		Foodtruck.findById(id)
-			.populate('category')
-			.populate('places')
-			.populate({
-				path: 'sessions',
-				populate: {
-					path: 'place',
-					model: 'place'
-				}
-			})
-			.populate('articles')
-			.then(foodtruck => {
-				res.send(foodtruck);
-			});
-	},
-
+	//MAJ profil FT
 	updateProfil(req, res, next) {
 	//Recuperation des données du Post
 		const logo = req.file;
 		const name = req.body.name;
 		const categoryID = req.body.category;
-
-		console.log(req.body);
 
 		//Recuperation du FT concerné
 		Foodtruck.findById(req.body.idFT)
@@ -86,6 +47,7 @@ module.exports = {
 			});
 	},
 
+	//MAJ Images FT
 	updateImages(req, res, next) {
 		//Recuperation des données du Post
 		const listFiles = req.files;
@@ -147,7 +109,7 @@ module.exports = {
 					.populate('places')
 					.populate('images').execPopulate()
 					.then(() => {
-						deleteImage(fileNameImage, idImage);
+						ImageController.delete(fileNameImage, idImage);
 						res.send(result);
 						next();
 					})
@@ -162,17 +124,11 @@ module.exports = {
 function uploadLogo(oldLogo, newLogo) {
 	return new Promise((resolve, reject) => {
 		if(newLogo) {
-		//Sauvegarde de l'image
-			const image = new Image({
-				name: newLogo.originalname,
-				type: newLogo.mimetype,
-				filename: newLogo.filename,
-				size: newLogo.size
-			});
-			image.save().then(() => {			
+			//Sauvegarde de l'image
+			ImageController.add(newLogo).then((image) => {			
 			//Si logo déjà en BDD, suppression de l'image et du document relatif
 				if(oldLogo) {
-					deleteImage(oldLogo.filename, oldLogo._id);
+					ImageController.delete(oldLogo.filename, oldLogo._id);
 				}
 		
 				//Retourne id image
@@ -188,21 +144,15 @@ function uploadLogo(oldLogo, newLogo) {
 function uploadImages(newImages) {
 	return new Promise((resolve, reject) => {
 		if(newImages) {
-		//Array d'images
+			//Array d'images
 			const listImagesId = [];
 
 			//Creation images
 			const addImg = newImages.map(newImage => {
 
 				//Sauvegarde de l'image
-				const image = new Image({
-					name: newImage.originalname,
-					type: newImage.mimetype,
-					filename: newImage.filename,
-					size: newImage.size
-				});
-				return image.save().then((res) => {
-					listImagesId.push(res._id);		
+				return ImageController.add(newImage).then((res) => {
+					listImagesId.push(res);		
 				})
 					.catch((error) => reject(error));
 			});
@@ -214,16 +164,5 @@ function uploadImages(newImages) {
 		} else {
 			resolve(null);
 		}
-	});
-}
-
-function deleteImage(imgFilename, imgId) {
-	fs.unlink(`./public/${imgFilename}`, (err) => {
-		if (err) {
-			console.error(err);
-		}
-	});
-	Image.deleteOne({_id: imgId}, (err) =>{
-		console.log(err);
 	});
 }

@@ -35,7 +35,6 @@ module.exports = server => {
 	
 	//User
 	server.get('/user', requireToken, UserController.getUser);
-	server.post('/adduser', UserController.create);
 	
 	// server.get('/projects', ProjectController.readAll);
 	// server.get('/project/:id', ProjectController.read);
@@ -43,7 +42,6 @@ module.exports = server => {
 	// server.delete('/project/:id', ProjectController.delete);
 
 	//Category
-	server.post('/category', CategoryController.create);
 	server.get('/categories', CategoryController.readAll);
 
 	//Place
@@ -54,12 +52,8 @@ module.exports = server => {
 	server.post('/session', SessionController.create);
 	server.get('/sessions', SessionController.readAll);
 
-	//Article
+	//Add article
 	server.post('/article', upload.single('article'), ArticleController.create);
-	server.get('/articles', ArticleController.readAll);
-
-	//FoodTruck
-	server.get('/foodtrucks', FoodTruckController.readAll);
 
 	//Upload logo
 	server.post('/upprofil', upload.single('logo'), FoodTruckController.updateProfil);

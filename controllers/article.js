@@ -1,32 +1,33 @@
 const Article = require('../models/article');
+const Foodtruck = require('../models/foodtruck');
+const ImageController = require('../controllers/image');
 
 module.exports = {
-	readAll(req, res) {
-		Article.find().then(articles => {
-			res.send(articles);
-		});
-	},
-
-	read(req, res) {
-		const { id } = req.params;
-
-		Article.findById(id).then(article => {
-			res.send(article);
-		});
-	},
-
 	create(req, res) {
 		const body = req.body;
 		const image = req.file;
 
-		const article = new Article({
-			value: body.value,
-			price: body.price,
-			description: body.description,
-			image: image._id
-		});
-		article.save().then(() => {
-			res.send(article);
+		//Creation image
+		ImageController.addImage(image).then((newImage) => {
+		
+			//Recuperation du FT concerné
+			Foodtruck.findById(body.idFT)
+				.then((theFoodTruck) => {
+
+					//Creation article
+					const article = new Article({
+						value: body.value,
+						price: body.price,
+						description: body.description,
+						image: newImage._id
+					});
+					article.save().then((newArticle) => {
+						theFoodTruck.articles.push(newArticle._id);
+						theFoodTruck.save().then((result) => {
+							res.send(result);
+						});
+					});
+				});
 		});
 	},
 
