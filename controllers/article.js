@@ -1,33 +1,23 @@
 const Article = require('../models/article');
-const Foodtruck = require('../models/foodtruck');
-const ImageController = require('../controllers/image');
+const ImageController = require('./image');
 
 module.exports = {
-	create(req, res) {
-		const body = req.body;
-		const image = req.file;
-
+	create(body, image) {
+		return new Promise((resolve, reject) => {
 		//Creation image
-		ImageController.addImage(image).then((newImage) => {
-		
-			//Recuperation du FT concerné
-			Foodtruck.findById(body.idFT)
-				.then((theFoodTruck) => {
-
-					//Creation article
-					const article = new Article({
-						value: body.value,
-						price: body.price,
-						description: body.description,
-						image: newImage._id
-					});
-					article.save().then((newArticle) => {
-						theFoodTruck.articles.push(newArticle._id);
-						theFoodTruck.save().then((result) => {
-							res.send(result);
-						});
-					});
+			ImageController.add(image).then((newImageId) => {
+			//Creation article
+				const article = new Article({
+					value: body.value,
+					price: body.price,
+					description: body.description,
+					image: newImageId
 				});
+				article.save().then((newArticle) => {
+					resolve(newArticle._id);
+				})
+					.catch((error) => reject(error));
+			});
 		});
 	},
 

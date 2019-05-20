@@ -1,5 +1,6 @@
 const Foodtruck = require('../models/foodtruck');
-const ImageController = require('../controllers/image');
+const ImageController = require('./image');
+const ArticleController = require('./article');
 
 module.exports = {
 	//MAJ profil FT
@@ -34,6 +35,7 @@ module.exports = {
 						theFoodTruck.save().then((result) => {
 							result.populate('logo')
 								.populate('places')
+								.populate('articles')
 								.populate('images').execPopulate()
 								.then(() => {
 									res.send(result);
@@ -67,6 +69,7 @@ module.exports = {
 							theFoodTruck.save().then((result) => {
 								result.populate('logo')
 									.populate('places')
+									.populate('articles')
 									.populate('images').execPopulate()
 									.then(() => {
 										res.send(result);
@@ -80,6 +83,7 @@ module.exports = {
 				}else{
 					theFoodTruck.populate('logo')
 						.populate('places')
+						.populate('articles')
 						.populate('images').execPopulate()
 						.then(() => {
 							res.send(theFoodTruck);
@@ -93,6 +97,7 @@ module.exports = {
 		
 	},
 
+	//Suppression image FT
 	deleteImage(req, res, next) {
 		//Recuperation des données du Post
 		const idFT = req.body.idFT;
@@ -107,6 +112,7 @@ module.exports = {
 			function(error, result) {
 				result.populate('logo')
 					.populate('places')
+					.populate('articles')
 					.populate('images').execPopulate()
 					.then(() => {
 						ImageController.delete(fileNameImage, idImage);
@@ -118,7 +124,31 @@ module.exports = {
 					});
 
 			});
-	}
+	},
+
+	//Ajout Article
+	addArticle(req, res) {
+		const body = req.body;
+		const image = req.file;
+
+		ArticleController.create(body, image).then(newArticleId => {
+
+			//Recuperation du FT concerné
+			Foodtruck.findById(body.idFT)
+				.then((theFoodTruck) => {
+					theFoodTruck.articles.push(newArticleId);
+					theFoodTruck.save().then((result) => {
+						result.populate('logo')
+							.populate('places')
+							.populate('articles')
+							.populate('images').execPopulate()
+							.then(() => {
+								res.send(result);
+							});
+					});
+				});
+		});
+	},
 };
 
 function uploadLogo(oldLogo, newLogo) {

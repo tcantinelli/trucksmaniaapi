@@ -53,7 +53,7 @@ module.exports = server => {
 	server.get('/sessions', SessionController.readAll);
 
 	//Add article
-	server.post('/article', upload.single('article'), ArticleController.create);
+	server.post('/article', upload.single('article'), FoodTruckController.addArticle);
 
 	//Upload logo
 	server.post('/upprofil', upload.single('logo'), FoodTruckController.updateProfil);
