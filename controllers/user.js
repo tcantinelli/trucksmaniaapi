@@ -100,6 +100,18 @@ module.exports = {
 						{
 							path: 'images',
 							model: 'image'
+						},
+						{
+							path: 'places',
+							model: 'place'
+						},
+						{
+							path: 'sessions',
+							model: 'session'
+						},
+						{
+							path: 'articles',
+							model: 'article'
 						}
 					]
 				})
