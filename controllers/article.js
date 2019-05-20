@@ -17,13 +17,16 @@ module.exports = {
 
 	create(req, res) {
 		const body = req.body;
+		const image = req.file;
+
 		const article = new Article({
 			value: body.value,
 			price: body.price,
-			image: body.image
+			description: body.description,
+			image: image._id
 		});
 		article.save().then(() => {
-			res.send({ result: article });
+			res.send(article);
 		});
 	},
 

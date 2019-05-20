@@ -36,7 +36,6 @@ module.exports = server => {
 	//User
 	server.get('/user', requireToken, UserController.getUser);
 	server.post('/adduser', UserController.create);
-	server.get('/users', UserController.readAll);
 	
 	// server.get('/projects', ProjectController.readAll);
 	// server.get('/project/:id', ProjectController.read);
@@ -56,7 +55,7 @@ module.exports = server => {
 	server.get('/sessions', SessionController.readAll);
 
 	//Article
-	server.post('/article', ArticleController.create);
+	server.post('/article', upload.single('article'), ArticleController.create);
 	server.get('/articles', ArticleController.readAll);
 
 	//FoodTruck
