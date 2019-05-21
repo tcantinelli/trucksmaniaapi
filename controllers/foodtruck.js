@@ -35,7 +35,14 @@ module.exports = {
 						theFoodTruck.save().then((result) => {
 							result.populate('logo')
 								.populate('places')
-								.populate('articles')
+								.populate({
+									path: 'articles',
+									populate: [
+										{
+											path: 'image',
+											model: 'image'
+										}
+									]})
 								.populate('images').execPopulate()
 								.then(() => {
 									res.send(result);
@@ -69,7 +76,14 @@ module.exports = {
 							theFoodTruck.save().then((result) => {
 								result.populate('logo')
 									.populate('places')
-									.populate('articles')
+									.populate({
+										path: 'articles',
+										populate: [
+											{
+												path: 'image',
+												model: 'image'
+											}
+										]})
 									.populate('images').execPopulate()
 									.then(() => {
 										res.send(result);
@@ -83,7 +97,14 @@ module.exports = {
 				}else{
 					theFoodTruck.populate('logo')
 						.populate('places')
-						.populate('articles')
+						.populate({
+							path: 'articles',
+							populate: [
+								{
+									path: 'image',
+									model: 'image'
+								}
+							]})
 						.populate('images').execPopulate()
 						.then(() => {
 							res.send(theFoodTruck);
@@ -111,7 +132,14 @@ module.exports = {
 			function(error, result) {
 				result.populate('logo')
 					.populate('places')
-					.populate('articles')
+					.populate({
+						path: 'articles',
+						populate: [
+							{
+								path: 'image',
+								model: 'image'
+							}
+						]})
 					.populate('images').execPopulate()
 					.then(() => {
 						ImageController.delete(idImage);
@@ -139,7 +167,14 @@ module.exports = {
 					theFoodTruck.save().then((result) => {
 						result.populate('logo')
 							.populate('places')
-							.populate('articles')
+							.populate({
+								path: 'articles',
+								populate: [
+									{
+										path: 'image',
+										model: 'image'
+									}
+								]})
 							.populate('images').execPopulate()
 							.then(() => {
 								res.send(result);
@@ -162,7 +197,14 @@ module.exports = {
 			function(error, result) {
 				result.populate('logo')
 					.populate('places')
-					.populate('articles')
+					.populate({
+						path: 'articles',
+						populate: [
+							{
+								path: 'image',
+								model: 'image'
+							}
+						]})
 					.populate('images').execPopulate()
 					.then(() => {
 						ArticleController.delete(idArticle);
