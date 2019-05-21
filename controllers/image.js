@@ -26,6 +26,8 @@ module.exports = {
 					resolve(res._id);		
 				})
 					.catch((error) => reject(error));
+			} else {
+				resolve(null);
 			}
 		});
 	},
