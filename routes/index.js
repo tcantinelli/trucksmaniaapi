@@ -3,7 +3,6 @@ const UserController = require('../controllers/user');
 const CategoryController = require('../controllers/category');
 const PlaceController = require('../controllers/place');
 const SessionController = require('../controllers/session');
-const ArticleController = require('../controllers/article');
 const FoodTruckController = require('../controllers/foodtruck');
 const OrderElementController = require('../controllers/orderElement');
 const OrderController = require('../controllers/order');
@@ -52,8 +51,9 @@ module.exports = server => {
 	server.post('/session', SessionController.create);
 	server.get('/sessions', SessionController.readAll);
 
-	//Add article
-	server.post('/article', upload.single('article'), FoodTruckController.addArticle);
+	//ARTICLES
+	server.post('/article', upload.single('article'), FoodTruckController.addArticle); //Add
+	server.post('/delarticle', FoodTruckController.deleteArticle); //Delete
 
 	//Upload logo
 	server.post('/upprofil', upload.single('logo'), FoodTruckController.updateProfil);

@@ -21,11 +21,10 @@ module.exports = {
 		});
 	},
 
-	delete(req, res) {
-		const { id } = req.params;
-
-		Article.findByIdAndRemove(id).then(article => {
-			res.send(article);
+	delete(articleID) {
+		Article.findByIdAndRemove(articleID).then(article => {
+			//Suppression image
+			ImageController.delete(article.image);
 		});
 	}
 };

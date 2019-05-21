@@ -32,14 +32,13 @@ module.exports = {
 		});
 	},
 
-	delete(imgFilename, imgId) {
-		fs.unlink(`./public/${imgFilename}`, (err) => {
-			if (err) {
-				console.error(err);
-			}
-		});
-		Image.deleteOne({_id: imgId}, (err) =>{
-			console.log(err);
+	delete(imageID) {
+		Image.findByIdAndRemove(imageID).then(image => {
+			fs.unlink(`./public/${image.filename}`, (err) => {
+				if (err) {
+					console.error(err);
+				}
+			});
 		});
 	}
 };

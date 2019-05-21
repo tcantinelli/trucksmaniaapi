@@ -102,7 +102,6 @@ module.exports = {
 		//Recuperation des données du Post
 		const idFT = req.body.idFT;
 		const idImage = req.body.idImage;
-		const fileNameImage = req.body.fileNameImage;
 
 		Foodtruck.findOneAndUpdate(
 			{ '_id': idFT },
@@ -115,7 +114,7 @@ module.exports = {
 					.populate('articles')
 					.populate('images').execPopulate()
 					.then(() => {
-						ImageController.delete(fileNameImage, idImage);
+						ImageController.delete(idImage);
 						res.send(result);
 						next();
 					})
@@ -148,6 +147,33 @@ module.exports = {
 					});
 				});
 		});
+	},
+
+	//Suppression Article
+	deleteArticle(req, res, next) {
+		//Recuperation des données du Post
+		const idFT = req.body.idFT;
+		const idArticle = req.body.idArticle;
+	
+		Foodtruck.findOneAndUpdate(
+			{ '_id': idFT },
+			{ $pull: { 'articles': idArticle }},
+			{ 'new': true },
+			function(error, result) {
+				result.populate('logo')
+					.populate('places')
+					.populate('articles')
+					.populate('images').execPopulate()
+					.then(() => {
+						ArticleController.delete(idArticle);
+						res.send(result);
+						next();
+					})
+					.catch((err) => {
+						return next(err);
+					});
+	
+			});
 	},
 };
 
