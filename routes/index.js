@@ -53,6 +53,7 @@ module.exports = server => {
 
 	//ARTICLES
 	server.post('/article', upload.single('article'), FoodTruckController.addArticle); //Add
+	server.post('/uparticle', upload.single('article'), FoodTruckController.updateArticle); //Update
 	server.post('/delarticle', FoodTruckController.deleteArticle); //Delete
 
 	//Upload logo

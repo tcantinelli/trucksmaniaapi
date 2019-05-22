@@ -26,5 +26,31 @@ module.exports = {
 			//Suppression image
 			ImageController.delete(article.image);
 		});
-	}
+	},
+	
+	update(body, image) {
+		return new Promise((resolve, reject) => {
+			if(body.oldImageID && image) {
+				ImageController.delete(body.oldImageID);
+			}
+			//Creation image
+			ImageController.add(image).then((newImageId) => {
+			//Update article
+				Article.findById(body.idArticle).then(updatedArticle => {
+					//Image
+					if(newImageId) {
+						updatedArticle.image = newImageId;
+					}
+					updatedArticle.value = body.value,
+					updatedArticle.price = body.price,
+					updatedArticle.description = body.description,
+
+					updatedArticle.save().then(() => {
+						resolve('done');		
+					})
+						.catch((error) => reject(error));
+				});
+			});
+		});
+	},
 };

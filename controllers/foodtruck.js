@@ -217,6 +217,34 @@ module.exports = {
 	
 			});
 	},
+
+	//Update Article
+	updateArticle(req, res) {
+		const body = req.body;
+		const image = req.file;
+
+		ArticleController.update(body, image).then(() => {
+
+			//Recuperation du FT concerné
+			Foodtruck.findById(body.idFT)
+				.then((theFoodTruck) => {
+					theFoodTruck.populate('logo')
+						.populate('places')
+						.populate({
+							path: 'articles',
+							populate: [
+								{
+									path: 'image',
+									model: 'image'
+								}
+							]})
+						.populate('images').execPopulate()
+						.then(() => {
+							res.send(theFoodTruck);
+						});
+				});
+		});
+	}
 };
 
 function uploadLogo(oldLogo, newLogo) {
