@@ -1,7 +1,6 @@
 const AuthentificationController = require('../controllers/authentification');
 const UserController = require('../controllers/user');
 const CategoryController = require('../controllers/category');
-const PlaceController = require('../controllers/place');
 const SessionController = require('../controllers/session');
 const FoodTruckController = require('../controllers/foodtruck');
 const OrderElementController = require('../controllers/orderElement');
@@ -43,9 +42,10 @@ module.exports = server => {
 	//Category
 	server.get('/categories', CategoryController.readAll);
 
-	//Place
-	server.post('/place', PlaceController.create);
-	server.get('/places', PlaceController.readAll);
+	//PLACES
+	server.post('/place', FoodTruckController.addPlace); //Add
+	server.post('/upplace', FoodTruckController.updatePlace); //Update
+	server.post('/delplace', FoodTruckController.deletePlace); //Delete
 
 	//Session
 	server.post('/session', SessionController.create);

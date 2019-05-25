@@ -1,6 +1,7 @@
 const Foodtruck = require('../models/foodtruck');
 const ImageController = require('./image');
 const ArticleController = require('./article');
+const Placeontroller = require('./place');
 
 module.exports = {
 	//MAJ profil FT
@@ -244,7 +245,95 @@ module.exports = {
 						});
 				});
 		});
-	}
+	},
+
+	//Ajout Place
+	addPlace(req, res) {
+		const body = req.body;
+
+		Placeontroller.create(body).then(newPlaceId => {
+			//Recuperation du FT concerné
+			Foodtruck.findById(body.idFT)
+				.then((theFoodTruck) => {
+					theFoodTruck.places.push(newPlaceId);
+					theFoodTruck.save().then((result) => {
+						result.populate('logo')
+							.populate('places')
+							.populate({
+								path: 'articles',
+								populate: [
+									{
+										path: 'image',
+										model: 'image'
+									}
+								]})
+							.populate('images').execPopulate()
+							.then(() => {
+								res.send(result);
+							});
+					});
+				});
+		});
+	},
+
+	//Update Place
+	updatePlace(req, res) {
+		const body = req.body;
+	
+		Placeontroller.update(body).then(() => {
+			//Recuperation du FT concerné
+			Foodtruck.findById(body.idFT)
+				.then((theFoodTruck) => {
+					theFoodTruck.populate('logo')
+						.populate('places')
+						.populate({
+							path: 'articles',
+							populate: [
+								{
+									path: 'image',
+									model: 'image'
+								}
+							]})
+						.populate('images').execPopulate()
+						.then(() => {
+							res.send(theFoodTruck);
+						});
+				});
+		});
+	},
+
+	//Suppression Place
+	deletePlace(req, res, next) {
+		const idFT = req.body.idFT;
+		const idPlace = req.body.idPlace;
+
+		Foodtruck.findOneAndUpdate(
+			{ '_id': idFT },
+			{ $pull: { 'places': idPlace }},
+			{ 'new': true },
+			function(error, result) {
+				result.populate('logo')
+					.populate('places')
+					.populate({
+						path: 'articles',
+						populate: [
+							{
+								path: 'image',
+								model: 'image'
+							}
+						]})
+					.populate('images').execPopulate()
+					.then(() => {
+						Placeontroller.delete(idPlace);
+						res.send(result);
+						next();
+					})
+					.catch((err) => {
+						return next(err);
+					});
+		
+			});
+	},
 };
 
 function uploadLogo(oldLogo, newLogo) {

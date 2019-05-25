@@ -1,38 +1,45 @@
 const Place = require('../models/place');
 
 module.exports = {
-	readAll(req, res) {
-		Place.find().then(places => {
-			res.send(places);
+	create(body) {
+		const {title, address, week, timeStart, timeEnd, latitude, longitude, zoom} = body;
+		
+		return new Promise((resolve, reject) => {
+			const place = new Place({
+				title, address, week, timeStart, timeEnd, latitude, longitude, zoom
+			});
+			place.save().then((newPlace) => {
+				resolve(newPlace._id);
+			})
+				.catch((error) => reject(error));
 		});
 	},
 
-	read(req, res) {
-		const { id } = req.params;
-
-		Place.findById(id).then(place => {
-			res.send(place);
-		});
+	delete(idPlace) {
+		Place.findByIdAndRemove(idPlace);
 	},
 
-	create(req, res) {
-		const body = req.body;
-		const place = new Place({
-			title: body.title,
-			adresse: body.adresse,
-			latitude: body.latitude,
-			longitude: body.longitude
-		});
-		place.save().then(() => {
-			res.send({ result: place });
+	update(body) {
+		return new Promise((resolve, reject) => {
+			Place.findOneAndUpdate(
+				{'_id': body.idPlace},
+				{$set: {
+					'title': body.title,
+					'address': body.address,
+					'week': body.week,
+					'timeStart': body.timeStart,
+					'timeEnd': body.timeEnd,
+					'latitude': body.latitude,
+					'longitude': body.longitude,
+					'zoom': body.zoom,
+				}},
+				{returnNewDocument : true}, 
+				function(err){
+					if(err){
+						reject(err);
+					}
+					resolve('done');
+				});
 		});
 	},
-
-	delete(req, res) {
-		const { id } = req.params;
-
-		Place.findByIdAndRemove(id).then(place => {
-			res.send(place);
-		});
-	}
 };

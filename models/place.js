@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 const PlaceSchema = new Schema({
 	title: String,
 	address: String,
-	week: {
+	week: [{
 		value: String,
 		active: Boolean
-	},
+	}],
 	timeStart: String,
 	timeEnd: String,
 	latitude: Number,
