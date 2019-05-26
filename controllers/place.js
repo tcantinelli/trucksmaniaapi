@@ -16,7 +16,9 @@ module.exports = {
 	},
 
 	delete(idPlace) {
-		Place.findByIdAndRemove(idPlace);
+		Place.findOneAndDelete({'_id':idPlace}).then(() => {
+			console.log('Place deleted');
+		});
 	},
 
 	update(body) {

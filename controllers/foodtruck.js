@@ -1,7 +1,7 @@
 const Foodtruck = require('../models/foodtruck');
 const ImageController = require('./image');
 const ArticleController = require('./article');
-const Placeontroller = require('./place');
+const PlaceController = require('./place');
 
 module.exports = {
 	//MAJ profil FT
@@ -251,7 +251,7 @@ module.exports = {
 	addPlace(req, res) {
 		const body = req.body;
 
-		Placeontroller.create(body).then(newPlaceId => {
+		PlaceController.create(body).then(newPlaceId => {
 			//Recuperation du FT concerné
 			Foodtruck.findById(body.idFT)
 				.then((theFoodTruck) => {
@@ -280,7 +280,7 @@ module.exports = {
 	updatePlace(req, res) {
 		const body = req.body;
 	
-		Placeontroller.update(body).then(() => {
+		PlaceController.update(body).then(() => {
 			//Recuperation du FT concerné
 			Foodtruck.findById(body.idFT)
 				.then((theFoodTruck) => {
@@ -324,7 +324,7 @@ module.exports = {
 						]})
 					.populate('images').execPopulate()
 					.then(() => {
-						Placeontroller.delete(idPlace);
+						PlaceController.delete(idPlace);
 						res.send(result);
 						next();
 					})
