@@ -9,6 +9,6 @@ const OrderElementSchema = new Schema({
 	quantity: Number
 });
 
-const OrderElement = mongoose.model('orderelement', OrderElementSchema, 'ORDERELEMENT');
+const OrderElement = mongoose.model('orderElement', OrderElementSchema, 'ELEMENT');
 
 module.exports = OrderElement;

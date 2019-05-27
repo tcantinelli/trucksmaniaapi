@@ -13,9 +13,9 @@ const OrderSchema = new Schema({
 	},
 	elements: [{
 		type: Schema.Types.ObjectId,
-		ref: 'orderElement'
+		ref: 'item'
 	}],
-	grade: { type: Number, default: null },
+	grade: { type: Number, default: 0 },
 	comment: { type: String, default: null }
 });
 

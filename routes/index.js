@@ -3,7 +3,6 @@ const UserController = require('../controllers/user');
 const CategoryController = require('../controllers/category');
 const SessionController = require('../controllers/session');
 const FoodTruckController = require('../controllers/foodtruck');
-const OrderElementController = require('../controllers/orderElement');
 const OrderController = require('../controllers/order');
 const ImageController = require('../controllers/image');
 const multer = require('multer');
@@ -33,11 +32,6 @@ module.exports = server => {
 	
 	//User
 	server.get('/user', requireToken, UserController.getUser);
-	
-	// server.get('/projects', ProjectController.readAll);
-	// server.get('/project/:id', ProjectController.read);
-	// server.post('/project', ProjectController.create);
-	// server.delete('/project/:id', ProjectController.delete);
 
 	//Category
 	server.get('/categories', CategoryController.readAll);
@@ -68,11 +62,6 @@ module.exports = server => {
 	//Get Image
 	server.get('/image/:id', ImageController.get);
 
-	//OrderElement
-	server.post('/orderelement', OrderElementController.create);
-	server.get('/orderelements', OrderElementController.readAll);
-
-	//Order
-	server.post('/order', OrderController.create);
-	server.get('/orders', OrderController.readAll);
+	//Orders
+	server.get('/ordersft/:idFT', OrderController.getOrdersForFT);
 };
