@@ -64,4 +64,7 @@ module.exports = server => {
 
 	//Orders
 	server.get('/ordersft/:idFT', OrderController.getOrdersForFT);
+
+	//Create 3 orders
+	server.get('/createorders/:idFT', OrderController.createOrdersToShow);
 };

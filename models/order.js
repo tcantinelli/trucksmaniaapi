@@ -12,8 +12,11 @@ const OrderSchema = new Schema({
 		ref: 'foodtruck'
 	},
 	elements: [{
-		type: Schema.Types.ObjectId,
-		ref: 'item'
+		article: {
+			type: Schema.Types.ObjectId,
+			ref: 'article'
+		},
+		quantity: Number
 	}],
 	grade: { type: Number, default: 0 },
 	comment: { type: String, default: null }
