@@ -18,7 +18,15 @@
   "homepage": "https://gitlab.com/tcantinelli/apisoapandsoftjs#readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
-    "mongoose": "^5.4.19"
+    "jwt-simple": "^0.5.6",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "mongoose": "^5.4.19",
+    "multer": "^1.4.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
   }
 }
