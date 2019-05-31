@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Article = require('../models/article');
 const ImageController = require('./image');
 
@@ -51,6 +52,31 @@ module.exports = {
 						.catch((error) => reject(error));
 				});
 			});
+		});
+	},
+
+	/* Clone d'un article pour démo. Spécifitité pour un article, contient une description du plat personnalisée avec le nom du 
+	FT de l'utilisateur
+	=> nouvel ID */
+	cloneArticle(articleID, FTname) {
+		//ID de l'article à modifier pour la description
+		const articleToModif = '5cf059f84461ae1924fbd9b1';
+
+		return new Promise((resolve, reject) => {
+			
+			Article.findById(articleID).then(newArticle => {
+				console.log(newArticle.value);
+				//Modif description si article ciblé
+				newArticle._id == articleToModif ? newArticle.description = `Le véritable hamburger du ${FTname}`: null;
+				newArticle._id = mongoose.Types.ObjectId();
+				newArticle.isNew = true;
+				newArticle.save()
+					.then((result) => {
+						resolve(result._id);
+					})
+					.catch((error) => reject(error));
+			})
+				.catch((error) => console.log(error));
 		});
 	}
 };

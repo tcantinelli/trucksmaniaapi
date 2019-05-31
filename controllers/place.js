@@ -46,6 +46,7 @@ module.exports = {
 		});
 	},
 
+	/* Clone d'un emplacement pour démo	=> nouvel ID */
 	clonePlace(idPlace) {
 		return new Promise((resolve, reject) => {
 			//Clone emplacement
