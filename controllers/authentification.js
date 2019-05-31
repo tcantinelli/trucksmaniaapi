@@ -44,9 +44,9 @@ exports.signup = function(req,res,next) {
 			addPlaces(foodtruck).then(newFT => {
 				////Ajout de 3 articles clonés pour démo
 				addArticles(newFT).then(newFTBis => {
-					newFTBis.save().then(() => {
+					newFTBis.save().then((newFTTer) => {
 						//Creation de 3 commandes pour démo
-						OrderController.createOrdersToShow(foodtruck._id);
+						OrderController.createOrdersToShow(newFTTer._id, newFTTer.articles);
 		
 						//Creation User
 						const user = new User({
@@ -83,10 +83,10 @@ exports.signin = function(req,res,next) {
 	})(req,res,next);
 };
 
-//Clone de 3 emplacements pour démo
+//Clone de 2 emplacements pour démo
 function addPlaces(foodtruck) {
 	return new Promise((resolve, reject) => {
-	//Liste de 2 emplacements pour la démo
+	//Liste des emplacements à cloner
 		const listePlaces = ['5ce9eb7a41a95c31a020ecee', '5ce9eca3e7ff2933d97c036b'];
 
 		const adds = listePlaces.map(placeId => {
@@ -102,11 +102,11 @@ function addPlaces(foodtruck) {
 	});
 }
 
-//Clone de 3 emplacements pour démo
+//Clone de 3 articles pour démo
 function addArticles(foodtruck) {
 	return new Promise((resolve, reject) => {
 
-		//Liste des 3 articles à cloner
+		//Liste des articles à cloner
 		const listArticlesRef = ['5cec58dbbe803d02837eb8fd', '5cec58fdbe803d02837eb8ff', '5cf059f84461ae1924fbd9b1'];
 
 		const adds = listArticlesRef.map(articleId => {

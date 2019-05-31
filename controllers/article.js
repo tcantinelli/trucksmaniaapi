@@ -65,7 +65,6 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			
 			Article.findById(articleID).then(newArticle => {
-				console.log(newArticle.value);
 				//Modif description si article ciblé
 				newArticle._id == articleToModif ? newArticle.description = `Le véritable hamburger du ${FTname}`: null;
 				newArticle._id = mongoose.Types.ObjectId();

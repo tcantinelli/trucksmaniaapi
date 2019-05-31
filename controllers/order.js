@@ -16,20 +16,23 @@ module.exports = {
 			});
 	},
 	
-	createOrdersToShow(idFT) {
+	/* Creation de 3 commandes, 2 à venir + 1 ancienne avec note et commentaire, à partir des articles
+	créés pour l'utilisateur 
+	=> null */
+	createOrdersToShow(idFT, listeIdArticles) {
 		const datas = [
 			{
 				elements: [
 					{
-						article: '5cf059f84461ae1924fbd9b1',
+						article: listeIdArticles[0],
 						quantity: 3
 					}, 
 					{
-						article : '5cec58dbbe803d02837eb8fd',
+						article : listeIdArticles[1],
 						quantity: 2
 					}, 
 					{
-						article : '5cec58fdbe803d02837eb8ff',
+						article : listeIdArticles[2],
 						quantity : 3
 					}
 				],
@@ -42,11 +45,11 @@ module.exports = {
 			{
 				elements: [
 					{
-						article: '5cf059f84461ae1924fbd9b1',
+						article: listeIdArticles[0],
 						quantity: 1
 					}, 
 					{
-						article : '5cec58dbbe803d02837eb8fd',
+						article : listeIdArticles[1],
 						quantity: 1
 					}
 				],
@@ -59,15 +62,15 @@ module.exports = {
 			{
 				elements: [
 					{
-						article: '5cf059f84461ae1924fbd9b1',
+						article: listeIdArticles[0],
 						quantity: 5
 					}, 
 					{
-						article : '5cec58dbbe803d02837eb8fd',
+						article : listeIdArticles[1],
 						quantity: 5
 					}, 
 					{
-						article : '5cec58fdbe803d02837eb8ff',
+						article : listeIdArticles[2],
 						quantity : 5
 					}
 				],
