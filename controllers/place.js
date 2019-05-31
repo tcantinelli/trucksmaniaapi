@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Place = require('../models/place');
 
 module.exports = {
@@ -44,4 +45,20 @@ module.exports = {
 				});
 		});
 	},
+
+	clonePlace(idPlace) {
+		return new Promise((resolve, reject) => {
+			//Clone emplacement
+			Place.findById(idPlace).then(newPlace => {
+				newPlace._id = mongoose.Types.ObjectId();
+				newPlace.isNew = true;
+				newPlace.save()
+					.then((result) => {
+						resolve(result._id);
+					})
+					.catch((error) => reject(error));
+			})
+				.catch((error) => console.log(error));
+		});
+	}
 };

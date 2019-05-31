@@ -62,9 +62,12 @@ module.exports = server => {
 	//Get Image
 	server.get('/image/:id', ImageController.get);
 
+	//Get Image
+	server.get('/image/:id', ImageController.get);
+
 	//Orders
 	server.get('/ordersft/:idFT', OrderController.getOrdersForFT);
 
-	//Create 3 orders
-	server.get('/createorders/:idFT', OrderController.createOrdersToShow);
+	//TESTS
+	// server.get('/test', AuthentificationController.testMe);
 };

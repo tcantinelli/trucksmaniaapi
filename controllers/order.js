@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const moment = require('moment');
 
 module.exports = {
 	getOrdersForFT(req, res) {
@@ -15,14 +16,12 @@ module.exports = {
 			});
 	},
 	
-	createOrdersToShow(req, res) {
-		const { idFT } = req.params;
-
+	createOrdersToShow(idFT) {
 		const datas = [
 			{
 				elements: [
 					{
-						article: '5cec58babe803d02837eb8fb',
+						article: '5cf059f84461ae1924fbd9b1',
 						quantity: 3
 					}, 
 					{
@@ -36,14 +35,14 @@ module.exports = {
 				],
 				grade: null,
 				comment: null,
-				dateOrder: '2020-04-06T10:18:50.234Z',
+				dateOrder: moment().add(7, 'days').toISOString(true),
 				client: '5cec5ea7b2f7ef7decf76462',
 				foodtruck: idFT
 			},
 			{
 				elements: [
 					{
-						article: '5cec58babe803d02837eb8fb',
+						article: '5cf059f84461ae1924fbd9b1',
 						quantity: 1
 					}, 
 					{
@@ -53,14 +52,14 @@ module.exports = {
 				],
 				grade: 4,
 				comment: 'Trop bon!',
-				dateOrder: '2019-04-06T10:18:50.234Z',
+				dateOrder: moment().subtract(7, 'days').toISOString(true),
 				client: '5cec5ea7b2f7ef7decf76462',
 				foodtruck: idFT
 			},
 			{
 				elements: [
 					{
-						article: '5cec58babe803d02837eb8fb',
+						article: '5cf059f84461ae1924fbd9b1',
 						quantity: 5
 					}, 
 					{
@@ -74,7 +73,7 @@ module.exports = {
 				],
 				grade: null,
 				comment: null,
-				dateOrder: '2020-04-08T10:18:50.234Z',
+				dateOrder: moment().add(7, 'days').toISOString(true),
 				client: '5cec5ea7b2f7ef7decf76464',
 				foodtruck: idFT
 			}
@@ -95,6 +94,5 @@ module.exports = {
 
 			newOrder.save();
 		});
-		res.send('Done');
 	}
 };
