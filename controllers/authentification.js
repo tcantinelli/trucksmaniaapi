@@ -122,3 +122,7 @@ function addArticles(foodtruck) {
 	});
 }
 
+//TEST CONNEXION
+exports.testMe = function(req, res) {
+	res.send('Tout est OK!');
+};

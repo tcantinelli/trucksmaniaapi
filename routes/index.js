@@ -1,7 +1,6 @@
 const AuthentificationController = require('../controllers/authentification');
 const UserController = require('../controllers/user');
 const CategoryController = require('../controllers/category');
-const SessionController = require('../controllers/session');
 const FoodTruckController = require('../controllers/foodtruck');
 const OrderController = require('../controllers/order');
 const ImageController = require('../controllers/image');
@@ -41,10 +40,6 @@ module.exports = server => {
 	server.post('/upplace', FoodTruckController.updatePlace); //Update
 	server.post('/delplace', FoodTruckController.deletePlace); //Delete
 
-	//Session
-	server.post('/session', SessionController.create);
-	server.get('/sessions', SessionController.readAll);
-
 	//ARTICLES
 	server.post('/article', upload.single('article'), FoodTruckController.addArticle); //Add
 	server.post('/uparticle', upload.single('article'), FoodTruckController.updateArticle); //Update
@@ -56,11 +51,8 @@ module.exports = server => {
 	//Upload Images
 	server.post('/upimages', upload.array('image',3), FoodTruckController.updateImages);
 
-	//delete Image
+	//Delete Image
 	server.post('/delimage', FoodTruckController.deleteImage);
-
-	//Get Image
-	server.get('/image/:id', ImageController.get);
 
 	//Get Image
 	server.get('/image/:id', ImageController.get);
@@ -69,5 +61,5 @@ module.exports = server => {
 	server.get('/ordersft/:idFT', OrderController.getOrdersForFT);
 
 	//TESTS
-	// server.get('/test', AuthentificationController.testMe);
+	server.get('/test', AuthentificationController.testMe);
 };
