@@ -27,10 +27,6 @@ module.exports = {
 							model: 'place'
 						},
 						{
-							path: 'sessions',
-							model: 'session'
-						},
-						{
 							path: 'articles',
 							model: 'article',
 							populate: [
